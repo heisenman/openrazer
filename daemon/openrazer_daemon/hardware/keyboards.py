@@ -424,13 +424,13 @@ class RazerBlackWidowV4LowProfileHyperSpeedWired(_RippleKeyboard):
     """
     Class for the Razer BlackWidow V4 Low Profile HyperSpeed (Wired)
     """
-    EVENT_FILE_REGEX = re.compile(r'.*Razer_Razer_BlackWidow_V4_Low_Profile_HyperSpeed(-if01)?-event-kbd')
+    EVENT_FILE_REGEX = re.compile(r'.*Razer_Razer_BlackWidow_V4_Low-profile_HyperSpeed(_\d+)?(-if01)?-event-kbd')
 
     USB_VID = 0x1532
     USB_PID = 0x02CC
     HAS_MATRIX = True
     WAVE_DIRS = (1, 2)
-    MATRIX_DIMS = [6, 18]
+    MATRIX_DIMS = [7, 22]
     POLL_RATES = [125, 250, 500, 1000]
     METHODS = ['get_device_type_keyboard', 'set_wave_effect', 'set_static_effect', 'set_spectrum_effect',
                'set_reactive_effect', 'set_none_effect', 'set_breath_random_effect', 'set_breath_single_effect', 'set_breath_dual_effect',
@@ -446,7 +446,7 @@ class RazerBlackWidowV4LowProfileHyperSpeedWireless(RazerBlackWidowV4LowProfileH
     """
     Class for the Razer BlackWidow V4 Low Profile HyperSpeed (Wireless)
     """
-    EVENT_FILE_REGEX = re.compile(r'.*Razer_Razer_BlackWidow_V4_Low_Profile_HyperSpeed(_\d+)?(-if01)?-event-mouse')
+    EVENT_FILE_REGEX = re.compile(r'.*Razer_Razer_BlackWidow_V4_Low-profile_HyperSpeed(_\d+)?(-if01)?-event-mouse')
     USB_PID = 0x02C9
 
 
