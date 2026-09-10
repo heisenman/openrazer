@@ -5070,6 +5070,7 @@ static int razer_raw_event_standard(struct hid_device *hdev, struct razer_kbd_us
  */
 static int razer_raw_event_bitfield(struct hid_device *hdev, struct razer_kbd_usb_device_data *usb_dev_data, struct usb_interface *intf, struct hid_report *report, u8 *data, int size)
 {
+    struct razer_kbd_device *device = hid_get_drvdata(hdev);
     DECLARE_BITMAP(bitfield, RAW_EVENT_BITFIELD_BITS) = { 0 };
 
     // The event were looking for is 16, 22 or 48 bytes long and starts with 0x04.
@@ -5111,11 +5112,17 @@ static int razer_raw_event_bitfield(struct hid_device *hdev, struct razer_kbd_us
             case 0x25: // BlackWidow V4 (non-Pro) M6
                 cur_value = USB_HID_KEY_F18; // F18
                 break;
-            case 0x50: // Volume Down
-                cur_value = USB_HID_KEY_MEDIA_VOLUMEDOWN;
+            case 0x50: // Media volume direction
+                if (device->usb_pid == USB_DEVICE_ID_RAZER_BLACKWIDOW_V4_LOW_PROFILE_HYPERSPEED_WIRED)
+                    cur_value = USB_HID_KEY_MEDIA_VOLUMEUP;
+                else
+                    cur_value = USB_HID_KEY_MEDIA_VOLUMEDOWN;
                 break;
-            case 0x51: // Volume Up
-                cur_value =  USB_HID_KEY_MEDIA_VOLUMEUP;
+            case 0x51: // Media volume direction
+                if (device->usb_pid == USB_DEVICE_ID_RAZER_BLACKWIDOW_V4_LOW_PROFILE_HYPERSPEED_WIRED)
+                    cur_value = USB_HID_KEY_MEDIA_VOLUMEDOWN;
+                else
+                    cur_value = USB_HID_KEY_MEDIA_VOLUMEUP;
                 break;
             case 0x52: // Mute
                 cur_value = USB_HID_KEY_MEDIA_MUTE;
