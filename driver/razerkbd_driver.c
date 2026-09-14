@@ -37,6 +37,12 @@ MODULE_LICENSE(DRIVER_LICENSE);
 #define RAZER_BRIGHTNESS_DOWN KEY_MACRO28
 #define RAZER_BRIGHTNESS_UP KEY_MACRO27
 
+// Cold-boot init retry: a wireless dongle that is still asleep at enumeration
+// may not answer the first command in time. These bound how long probe will
+// keep retrying the initial mode-set before giving up (non-fatally).
+#define RAZER_KBD_INIT_RETRIES 5
+#define RAZER_KBD_INIT_RETRY_DELAY_MS 100
+
 /*
  * Whether hid_report_raw_event() takes 6 parameters compared to the original 5 parameters.
  * See "HID: pass the buffer size to hid_report_raw_event"
@@ -5432,6 +5438,7 @@ static int razer_kbd_probe(struct hid_device *hdev, const struct hid_device_id *
     struct razer_kbd_device *dev = NULL;
     struct razer_kbd_usb_device_data *usb_dev_data = NULL;
     int err;
+    int attempt;
 
     dev = kzalloc_obj(*dev);
     if(dev == NULL) {
@@ -5957,9 +5964,20 @@ static int razer_kbd_probe(struct hid_device *hdev, const struct hid_device_id *
         // device files created above attached to a device with no driver data,
         // and any read of them would dereference NULL.
         if (usb_dev->descriptor.idProduct != USB_DEVICE_ID_RAZER_TARTARUS_PRO) {
-            err = razer_set_device_mode(dev, 0x00, 0x00);
+            // razer_send_payload() already retries a few times in quick
+            // succession; retry again here, spaced further apart, so a dongle
+            // that is still waking from a cold boot gets initialised on boot
+            // rather than only after a replug. The delay only happens when an
+            // attempt fails, so healthy devices see no added latency.
+            for (attempt = 0; attempt < RAZER_KBD_INIT_RETRIES; attempt++) {
+                err = razer_set_device_mode(dev, 0x00, 0x00);
+                if (!err)
+                    break;
+                msleep(RAZER_KBD_INIT_RETRY_DELAY_MS);
+            }
             if (err)
-                hid_warn(hdev, "failed to set device mode: %d\n", err);
+                hid_warn(hdev, "failed to set device mode after %d attempts: %d\n",
+                         RAZER_KBD_INIT_RETRIES, err);
         }
     } else if(intf->cur_altsetting->desc.bInterfaceProtocol == USB_INTERFACE_PROTOCOL_KEYBOARD) {
         CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_key_super);
