@@ -493,6 +493,9 @@ static ssize_t razer_attr_read_kbd_layout(struct device *dev, struct device_attr
     struct razer_report response = {0};
     int err;
 
+    if (!device)
+        return -ENODEV;
+
     request = get_razer_report(0x00, 0x86, 0x02);
     request.transaction_id.id = 0xFF;
 
@@ -671,6 +674,9 @@ static ssize_t razer_attr_read_charge_level(struct device *dev, struct device_at
     struct razer_report response = {0};
     int err;
 
+    if (!device)
+        return -ENODEV;
+
     request = razer_chroma_misc_get_battery_level();
 
     switch (device->usb_pid) {
@@ -720,6 +726,9 @@ static ssize_t razer_attr_read_charge_status(struct device *dev, struct device_a
     struct razer_report request = {0};
     struct razer_report response = {0};
     int err;
+
+    if (!device)
+        return -ENODEV;
 
     request = razer_chroma_misc_get_charging_status();
 
@@ -771,6 +780,9 @@ static ssize_t razer_attr_write_charge_effect(struct device *dev, struct device_
     struct razer_report response = {0};
     int err;
 
+    if (!device)
+        return -ENODEV;
+
     if (count != 1) {
         dev_warn(dev, "razerkbd: Incorrect number of bytes for setting the charging effect\n");
         return -EINVAL;
@@ -797,6 +809,9 @@ static ssize_t razer_attr_write_charge_colour(struct device *dev, struct device_
     struct razer_report request = {0};
     struct razer_report response = {0};
     int err;
+
+    if (!device)
+        return -ENODEV;
 
     // First enable static charging effect
     request = razer_chroma_misc_set_dock_charge_type(0x01);
@@ -828,6 +843,9 @@ static ssize_t razer_attr_read_charge_low_threshold(struct device *dev, struct d
     struct razer_report request = {0};
     struct razer_report response = {0};
     int err;
+
+    if (!device)
+        return -ENODEV;
 
     request = razer_chroma_misc_get_low_battery_threshold();
     request.transaction_id.id = 0xFF;
@@ -988,6 +1006,9 @@ static ssize_t razer_attr_read_game_led_state(struct device *dev, struct device_
     struct razer_report response = {0};
     int err;
 
+    if (!device)
+        return -ENODEV;
+
     switch (device->usb_pid) {
     case USB_DEVICE_ID_RAZER_HUNTSMAN_V2_TENKEYLESS:
     case USB_DEVICE_ID_RAZER_HUNTSMAN_V2:
@@ -1126,6 +1147,9 @@ static ssize_t razer_attr_read_keyswitch_optimization(struct device *dev, struct
     int state;
     int err;
 
+    if (!device)
+        return -ENODEV;
+
     switch (device->usb_pid) {
     case USB_DEVICE_ID_RAZER_HUNTSMAN_V2_TENKEYLESS:
     case USB_DEVICE_ID_RAZER_HUNTSMAN_V2:
@@ -1191,6 +1215,9 @@ static ssize_t razer_attr_read_macro_led_state(struct device *dev, struct device
     struct razer_report response = {0};
     int err;
 
+    if (!device)
+        return -ENODEV;
+
     request = razer_chroma_standard_get_led_state(VARSTORE, MACRO_LED);
     request.transaction_id.id = 0xFF;
 
@@ -1221,6 +1248,9 @@ static ssize_t razer_attr_read_device_type(struct device *dev, struct device_att
     struct razer_kbd_device *device = dev_get_drvdata(dev);
 
     char *device_type;
+
+    if (!device)
+        return -ENODEV;
 
     switch (device->usb_pid) {
 
@@ -1836,6 +1866,9 @@ static ssize_t razer_attr_read_macro_led_effect(struct device *dev, struct devic
     struct razer_report response = {0};
     int err;
 
+    if (!device)
+        return -ENODEV;
+
     request = razer_chroma_standard_get_led_effect(VARSTORE, MACRO_LED);
     request.transaction_id.id = 0xFF;
 
@@ -1857,6 +1890,9 @@ static ssize_t razer_attr_write_matrix_effect_pulsate(struct device *dev, struct
     struct razer_report request = {0};
     struct razer_report response = {0};
     int err;
+
+    if (!device)
+        return -ENODEV;
 
     switch (device->usb_pid) {
     case USB_DEVICE_ID_RAZER_BLACKWIDOW_STEALTH:
@@ -1900,6 +1936,9 @@ static ssize_t razer_attr_read_matrix_effect_pulsate(struct device *dev, struct 
     struct razer_report response = {0};
     int err;
 
+    if (!device)
+        return -ENODEV;
+
     request = razer_chroma_standard_get_led_effect(VARSTORE, LOGO_LED);
     request.transaction_id.id = 0xFF;
 
@@ -1923,6 +1962,9 @@ static ssize_t razer_attr_read_profile_led_red(struct device *dev, struct device
     struct razer_report request = {0};
     struct razer_report response = {0};
     int err;
+
+    if (!device)
+        return -ENODEV;
 
     switch (device->usb_pid) {
     case USB_DEVICE_ID_RAZER_ORBWEAVER_CHROMA:
@@ -1963,6 +2005,9 @@ static ssize_t razer_attr_read_profile_led_green(struct device *dev, struct devi
     struct razer_report response = {0};
     int err;
 
+    if (!device)
+        return -ENODEV;
+
     switch (device->usb_pid) {
     case USB_DEVICE_ID_RAZER_ORBWEAVER_CHROMA:
     case USB_DEVICE_ID_RAZER_TARTARUS_CHROMA:
@@ -2001,6 +2046,9 @@ static ssize_t razer_attr_read_profile_led_blue(struct device *dev, struct devic
     struct razer_report request = {0};
     struct razer_report response = {0};
     int err;
+
+    if (!device)
+        return -ENODEV;
 
     switch (device->usb_pid) {
     case USB_DEVICE_ID_RAZER_ORBWEAVER_CHROMA:
@@ -2168,6 +2216,9 @@ static ssize_t razer_attr_read_device_serial(struct device *dev, struct device_a
     struct razer_report response = {0};
     int err;
 
+    if (!device)
+        return -ENODEV;
+
     /* For Blade laptops we get the serial number from DMI */
     if (is_blade_laptop(device)) {
         strscpy(serial_string, dmi_get_system_info(DMI_PRODUCT_SERIAL), sizeof(serial_string));
@@ -2200,6 +2251,9 @@ static ssize_t razer_attr_read_firmware_version(struct device *dev, struct devic
     struct razer_report response = {0};
     int err;
 
+    if (!device)
+        return -ENODEV;
+
     request = razer_chroma_standard_get_firmware_version();
     request.transaction_id.id = 0xFF;
 
@@ -2221,6 +2275,9 @@ static ssize_t razer_attr_write_matrix_effect_none(struct device *dev, struct de
     struct razer_report request = {0};
     struct razer_report response = {0};
     int err;
+
+    if (!device)
+        return -ENODEV;
 
     switch (device->usb_pid) {
     case USB_DEVICE_ID_RAZER_BLACKWIDOW_LITE:
@@ -2575,6 +2632,9 @@ static ssize_t razer_attr_write_matrix_effect_spectrum(struct device *dev, struc
     struct razer_report response = {0};
     int err;
 
+    if (!device)
+        return -ENODEV;
+
     switch (device->usb_pid) {
     case USB_DEVICE_ID_RAZER_ORNATA:
     case USB_DEVICE_ID_RAZER_ORNATA_CHROMA:
@@ -2896,6 +2956,9 @@ static ssize_t razer_attr_write_matrix_effect_static(struct device *dev, struct 
     struct razer_report request = {0};
     struct razer_report response = {0};
     int err;
+
+    if (!device)
+        return -ENODEV;
 
     switch (device->usb_pid) {
     case USB_DEVICE_ID_RAZER_ORBWEAVER:
@@ -3380,6 +3443,9 @@ static ssize_t razer_attr_write_matrix_effect_breath(struct device *dev, struct 
     struct razer_report response = {0};
     int err;
 
+    if (!device)
+        return -ENODEV;
+
     switch (device->usb_pid) {
     case USB_DEVICE_ID_RAZER_BLACKWIDOW_LITE:
     case USB_DEVICE_ID_RAZER_ORNATA:
@@ -3694,6 +3760,9 @@ static ssize_t razer_attr_read_logo_led_state(struct device *dev, struct device_
     int state;
     int err;
 
+    if (!device)
+        return -ENODEV;
+
     request = razer_chroma_standard_get_led_effect(VARSTORE, LOGO_LED);
     request.transaction_id.id = 0xFF;
 
@@ -3951,6 +4020,9 @@ static ssize_t razer_attr_read_test(struct device *dev, struct device_attribute 
     struct razer_report response = {0};
     int err;
 
+    if (!device)
+        return -ENODEV;
+
     request = get_razer_report(0x00, 0x86, 0x02);
     request.transaction_id.id = 0xFF;
 
@@ -4155,6 +4227,9 @@ static ssize_t razer_attr_read_matrix_brightness(struct device *dev, struct devi
     struct razer_report response = {0};
     int err;
 
+    if (!device)
+        return -ENODEV;
+
     switch (device->usb_pid) {
 
     case USB_DEVICE_ID_RAZER_TARTARUS_V2:
@@ -4334,6 +4409,9 @@ static ssize_t razer_attr_write_device_mode(struct device *dev, struct device_at
     struct razer_report response = {0};
     int err;
 
+    if (!device)
+        return -ENODEV;
+
     if (count != 2) {
         dev_warn(dev, "razerkbd: Device mode only takes 2 bytes.\n");
         return -EINVAL;
@@ -4365,6 +4443,9 @@ static ssize_t razer_attr_read_device_mode(struct device *dev, struct device_att
     struct razer_report request = {0};
     struct razer_report response = {0};
     int err;
+
+    if (!device)
+        return -ENODEV;
 
     request = razer_chroma_standard_get_device_mode();
     request.transaction_id.id = 0xFF;
@@ -4588,6 +4669,9 @@ static ssize_t razer_attr_read_poll_rate(struct device *dev, struct device_attri
     unsigned short polling_rate = 0;
     int err;
 
+    if (!device)
+        return -ENODEV;
+
     switch (device->usb_pid) {
     case USB_DEVICE_ID_RAZER_HUNTSMAN_V2_TENKEYLESS:
     case USB_DEVICE_ID_RAZER_HUNTSMAN_V2:
@@ -4713,6 +4797,9 @@ static ssize_t razer_attr_read_key_super(struct device *dev, struct device_attri
 {
     struct razer_kbd_device *device = dev_get_drvdata(dev);
 
+    if (!device)
+        return -ENODEV;
+
     buf[0] = device->block_keys[0];
 
     return 1;
@@ -4743,6 +4830,9 @@ static ssize_t razer_attr_read_key_alt_tab(struct device *dev, struct device_att
 {
     struct razer_kbd_device *device = dev_get_drvdata(dev);
 
+    if (!device)
+        return -ENODEV;
+
     buf[0] = device->block_keys[1];
 
     return 1;
@@ -4771,6 +4861,9 @@ static ssize_t razer_attr_write_key_alt_f4(struct device *dev, struct device_att
 static ssize_t razer_attr_read_key_alt_f4(struct device *dev, struct device_attribute *attr, char *buf)
 {
     struct razer_kbd_device *device = dev_get_drvdata(dev);
+
+    if (!device)
+        return -ENODEV;
 
     buf[0] = device->block_keys[2];
 
@@ -5877,12 +5970,14 @@ static int razer_kbd_probe(struct hid_device *hdev, const struct hid_device_id *
     hid_set_drvdata(hdev, dev);
     dev_set_drvdata(&hdev->dev, dev);
 
-    if(hid_parse(hdev)) {
+    retval = hid_parse(hdev);
+    if (retval) {
         hid_err(hdev, "parse failed\n");
         goto exit_free;
     }
 
-    if (hid_hw_start(hdev, HID_CONNECT_DEFAULT)) {
+    retval = hid_hw_start(hdev, HID_CONNECT_DEFAULT);
+    if (retval) {
         hid_err(hdev, "hw start failed\n");
         goto exit_free;
     }
@@ -5897,6 +5992,16 @@ static int razer_kbd_probe(struct hid_device *hdev, const struct hid_device_id *
     return 0;
 
 exit_free:
+    // Never report success on the error path: returning 0 would leave the HID
+    // core believing the device is bound while dev has just been freed.
+    if (retval == 0)
+        retval = -EIO;
+    // Clear the driver data before freeing dev so that any read of a sysfs
+    // attribute file created above (which is not torn down on a failed probe)
+    // hits the !device guard in the show/store handlers and returns -ENODEV
+    // instead of dereferencing freed memory.
+    hid_set_drvdata(hdev, NULL);
+    dev_set_drvdata(&hdev->dev, NULL);
     kfree(dev);
     return retval;
 }
